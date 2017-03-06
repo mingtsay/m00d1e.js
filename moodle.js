@@ -4,11 +4,11 @@ var cheerio = require('cheerio');
 var moment	= require('moment');
 var j = request.jar();
 
-var usr = 'isu10303118a';
+var usr = '';
 var pass = '';
 
-moodleLoginURL = 'http://moodle.isu.edu.tw/login/index.php';
-moodleMyPageURL= 'http://moodle.isu.edu.tw/my/index.php?mynumber=0';
+moodleLoginURL = 'http://moodle.mcu.edu.tw/login/';
+moodleMyPageURL= 'http://moodle.mcu.edu.tw/my/';
 
 var login = function( usr, pass, callback) {
 
@@ -33,7 +33,7 @@ var analyzerMoodle = function( source, callback ) {
 	$("div[class='box coursebox']").each(
 		function(i, elemi) {
 
-			var className = $(elemi).find(".title").text().split('_')[1];
+			var className = $(elemi).find(".title").text();
 			var classLink = $(elemi).find("a").attr('href');
 			var classActivity = $(elemi).find(".activity_info");
 
