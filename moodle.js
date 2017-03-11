@@ -7,22 +7,23 @@ var jar = request.jar();
 var username = 'username';
 var password = 'password';
 
+var moodleCourse = /^10502-\d{5}/;
 var moodleNotUpload = /尚未繳交作業/;
 var moodleLogin = 'http://moodle.mcu.edu.tw/login/';
 var moodleAuth = 'http://moodle.mcu.edu.tw/auth/mnet/jump.php?hostid=';
 var moodleHosts = [
-    {hostid: '40', my: 'http://moodle.km.mcu.edu.tw/my/', name: 'Kinmen Location'                , isLogin: false, courses: []}, // Kinmen Location                  銘傳大學金門校區
-    {hostid: '39', my: 'http://moodle-30.mcu.edu.tw/my/', name: 'International College'          , isLogin: false, courses: []}, // International College            國際學院
-    {hostid: '38', my: 'http://moodle-29.mcu.edu.tw/my/', name: 'Health Technology'              , isLogin: false, courses: []}, // Health Technology                健康科技學院
-    {hostid: '37', my: 'http://moodle-28.mcu.edu.tw/my/', name: 'Social Sciences'                , isLogin: false, courses: []}, // Social Sciences                  社會科學院
-    {hostid: '36', my: 'http://moodle-27.mcu.edu.tw/my/', name: 'Tourism'                        , isLogin: false, courses: []}, // Tourism                          觀光學院
-    {hostid: '35', my: 'http://moodle-26.mcu.edu.tw/my/', name: 'Information Technology'         , isLogin: false, courses: []}, // Information Technology           資訊學院
-    {hostid: '34', my: 'http://moodle-25.mcu.edu.tw/my/', name: 'Communication'                  , isLogin: false, courses: []}, // Communication                    傳播學院
-    {hostid: '33', my: 'http://moodle-24.mcu.edu.tw/my/', name: 'Education and Applied Languages', isLogin: false, courses: []}, // Education and Applied Languages  教育暨應用語文學院
-    {hostid: '32', my: 'http://moodle-23.mcu.edu.tw/my/', name: 'Law'                            , isLogin: false, courses: []}, // Law                              法律學院
-    {hostid: '31', my: 'http://moodle-22.mcu.edu.tw/my/', name: 'Design'                         , isLogin: false, courses: []}, // Design                           設計學院
-    {hostid: '30', my: 'http://moodle-21.mcu.edu.tw/my/', name: 'Management'                     , isLogin: false, courses: []}, // Management                       管理學院
-    {hostid: '29', my: 'http://moodle-20.mcu.edu.tw/my/', name: 'Other'                          , isLogin: false, courses: []}  // Other                            其他
+    {hostid: '40', my: 'http://moodle.km.mcu.edu.tw/my/?mynumber=0', name: 'Kinmen Location'                , isLogin: false, courses: []}, // Kinmen Location                  銘傳大學金門校區
+    {hostid: '39', my: 'http://moodle-30.mcu.edu.tw/my/?mynumber=0', name: 'International College'          , isLogin: false, courses: []}, // International College            國際學院
+    {hostid: '38', my: 'http://moodle-29.mcu.edu.tw/my/?mynumber=0', name: 'Health Technology'              , isLogin: false, courses: []}, // Health Technology                健康科技學院
+    {hostid: '37', my: 'http://moodle-28.mcu.edu.tw/my/?mynumber=0', name: 'Social Sciences'                , isLogin: false, courses: []}, // Social Sciences                  社會科學院
+    {hostid: '36', my: 'http://moodle-27.mcu.edu.tw/my/?mynumber=0', name: 'Tourism'                        , isLogin: false, courses: []}, // Tourism                          觀光學院
+    {hostid: '35', my: 'http://moodle-26.mcu.edu.tw/my/?mynumber=0', name: 'Information Technology'         , isLogin: false, courses: []}, // Information Technology           資訊學院
+    {hostid: '34', my: 'http://moodle-25.mcu.edu.tw/my/?mynumber=0', name: 'Communication'                  , isLogin: false, courses: []}, // Communication                    傳播學院
+    {hostid: '33', my: 'http://moodle-24.mcu.edu.tw/my/?mynumber=0', name: 'Education and Applied Languages', isLogin: false, courses: []}, // Education and Applied Languages  教育暨應用語文學院
+    {hostid: '32', my: 'http://moodle-23.mcu.edu.tw/my/?mynumber=0', name: 'Law'                            , isLogin: false, courses: []}, // Law                              法律學院
+    {hostid: '31', my: 'http://moodle-22.mcu.edu.tw/my/?mynumber=0', name: 'Design'                         , isLogin: false, courses: []}, // Design                           設計學院
+    {hostid: '30', my: 'http://moodle-21.mcu.edu.tw/my/?mynumber=0', name: 'Management'                     , isLogin: false, courses: []}, // Management                       管理學院
+    {hostid: '29', my: 'http://moodle-20.mcu.edu.tw/my/?mynumber=0', name: 'Other'                          , isLogin: false, courses: []}  // Other                            其他
 ];
 
 var loginViaAuth = function(i, callback) {
@@ -67,7 +68,7 @@ var analyzeMyPage = function(html, j, callback) {
     var $ = cheerio.load(html), e = $('div.box.coursebox');
 
     for (var i = 0; i < e.length; ++i) {
-        //if ($(e[i]).find('.title').text().startsWith('10502-'))
+        if (!moodleCourse.test($(e[i]).find('.title').text())) continue;
         moodleHosts[j].courses.push({
             name: $(e[i]).find('.title').text(),
             link: $(e[i]).find('a').attr('href'),
